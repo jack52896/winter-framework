@@ -1,0 +1,13 @@
+**工作流程**
+
+一.Ioc容器的初始化
+
+1）WinterClassPathXmlApplicationContext读取配置文件
+将配置文件路径解析加载成WinterBeanDefinition对象、将生成的所有
+WinterBeanDefinition对象存入kv键值对的beanDefinitionMap中
+
+2）配置文件的解析交给WinterBeanDefinitionReader处理
+将所有的application.properties定义的包下的所有文件放入文件List集合中
+
+3）将得到的所有List<String> 解析为List<WinterBeanDefinition>
+之后将List<WinterBeanDefinition>进行注册到beanDefinitionMap中完成ioc的初始化
