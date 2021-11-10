@@ -25,9 +25,10 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
     private String[] configurations;
     private WinterBeanDefinitionReader reader;
     //用于保证注册单例化的容器
-    private Map<String, Object> factoryBeanObjectCache = new HashMap<String, Object>();
+    private Map<String, Object> factoryBeanObjectCache = new HashMap<>();
     //用于存储代理所有的代理过的对象
     private Map<String, WinterBeanWrapper> factoryBeanInstanceObjectCache = new ConcurrentHashMap<>();
+
     public WinterClassPathXmlApplicationContext(String... configurations){
         this.configurations = configurations;
         try {

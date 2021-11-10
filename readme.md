@@ -16,3 +16,7 @@ WinterBeanDefinition对象存入kv键值对的beanDefinitionMap中
 
 1）当需要依赖注入时、通过getBean方法启动手动注入、并且扫描当前需要注入的对象中拥有哪些
 加上了WinterAutoWired的注解、将其自动注入、自动注入完成
+
+三、mvc初始化
+
+1）底层采用servlet完成9大组件的初始化
