@@ -40,7 +40,26 @@ public class WinterDispatcherServlet extends HttpServlet {
     }
 
     private void doDisPatcher(HttpServletRequest req, HttpServletResponse resp) {
+        WinterHandleMapping mapping = this.getHandle(req);
+        if(mapping == null){
+            try {
+                throw new Exception("没有找到该请求对应的控制器");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    private WinterHandleMapping getHandle(HttpServletRequest req) {
+        String url = req.getRequestURI();
+        String contextPath = req.getContextPath();
+        String replace = url.replace(contextPath, "");
+        for (WinterHandleMapping winterHandleMapping : winterHandleMappings) {
+            if(winterHandleMapping.getPattern().equals(Pattern.compile(replace))){
+                return winterHandleMapping;
+            }
+        }
+        return null;
     }
 
     @Override

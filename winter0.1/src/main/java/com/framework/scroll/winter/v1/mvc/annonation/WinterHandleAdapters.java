@@ -23,7 +23,10 @@ public class WinterHandleAdapters {
      * @param rep
      * @param handle
      */
-    public void handle(HttpServletRequest req, HttpServletResponse rep, Object handle){
+    public void handle(HttpServletRequest req, HttpServletResponse rep, Object handle) throws Exception {
+        if(!this.support(handle)){
+            throw new Exception("该请求不存在");
+        }
 
     }
 }
