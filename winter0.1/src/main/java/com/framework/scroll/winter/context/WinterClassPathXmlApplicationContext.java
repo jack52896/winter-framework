@@ -121,5 +121,10 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
             super.beanDefinitionMap.put(winterBeanDefinition.getFactoryBeanName(), winterBeanDefinition);
         }
     }
-
+    /**
+     * 获取所有的BeanDefinition
+     */
+    public List<WinterBeanDefinition> getBeanDefition(){
+        return reader.loadBeanDefinition();
+    }
 }
