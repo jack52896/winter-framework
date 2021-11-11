@@ -23,5 +23,4 @@ WinterBeanDefinition对象存入kv键值对的beanDefinitionMap中
 
 2) WinterHandleMapping初始化完成
    
-2) WinterHandleAdapters初始化完成、doDisPatcher处理用户请求, 在handlemapping中
-寻找对应的handlemapping、再对其进行解析
+2) WinterHandleAdapters初始化完成、doDisPatcher处理用户请求, 在handlemapping中、寻找对应的handlemapping、再对其进行解析
