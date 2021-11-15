@@ -43,7 +43,7 @@ public class WinterDispatcherServlet extends HttpServlet {
         }
     }
 
-    private void doDisPatcher(HttpServletRequest req, HttpServletResponse resp) {
+    private void doDisPatcher(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         WinterHandleMapping mapping = this.getHandle(req);
         if(mapping == null){
             try {
@@ -53,6 +53,9 @@ public class WinterDispatcherServlet extends HttpServlet {
             }
         }
         WinterHandleAdapters handleAdapters = getHandleAdapters(mapping);
+
+        //寻找该控制器对应的适配器
+        handleAdapters.handle(req, resp, mapping);
 
     }
 
