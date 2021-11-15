@@ -7,7 +7,7 @@
     <display-name>Gupao Web Application</display-name>
     <servlet>
         <servlet-name>mvc</servlet-name>
-        <servlet-class>com.framework.scroll.winter.v1.mvc.servlet.WinterDispatcherServlet</servlet-class>
+        <servlet-class>com.framework.scroll.winter.v1.webmvc.servlet.WinterDispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>application.properties</param-value>

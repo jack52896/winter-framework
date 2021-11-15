@@ -1,4 +1,4 @@
-package com.framework.scroll.winter.v1.mvc.annonation;
+package com.framework.scroll.winter.v1.webmvc.annonation;
 
 import lombok.Data;
 

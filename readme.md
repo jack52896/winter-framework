@@ -21,6 +21,8 @@ WinterBeanDefinition对象存入kv键值对的beanDefinitionMap中
 
 1) 底层采用servlet完成9大组件的初始化
 
-2) WinterHandleMapping初始化完成
-   
-2) WinterHandleAdapters初始化完成、doDisPatcher处理用户请求, 在handlemapping中、寻找对应的handlemapping、再对其进行解析
+2) WinterHandleMapping初始化完成 doDisPatcher处理用户请求, 在handlemapping中、寻找对应的handlemapping、再对其进行解析
+
+3) 解析用户发送的parametermap参数、完成方法中形参与实参的相互对应、完成@WinterRequestParm()注解初始化
+
+4) 

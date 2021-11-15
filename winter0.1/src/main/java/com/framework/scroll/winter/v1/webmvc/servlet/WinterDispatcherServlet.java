@@ -1,11 +1,12 @@
-package com.framework.scroll.winter.v1.mvc.servlet;
+package com.framework.scroll.winter.v1.webmvc.servlet;
 
 import com.framework.scroll.winter.annonation.WinterController;
 import com.framework.scroll.winter.annonation.WinterRequestMapping;
 import com.framework.scroll.winter.beans.config.WinterBeanDefinition;
 import com.framework.scroll.winter.context.WinterClassPathXmlApplicationContext;
-import com.framework.scroll.winter.v1.mvc.annonation.WinterHandleAdapters;
-import com.framework.scroll.winter.v1.mvc.annonation.WinterHandleMapping;
+import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleAdapters;
+import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleMapping;
+import com.framework.scroll.winter.v1.webmvc.bean.WinterModelAndView;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -55,7 +56,8 @@ public class WinterDispatcherServlet extends HttpServlet {
         WinterHandleAdapters handleAdapters = getHandleAdapters(mapping);
 
         //寻找该控制器对应的适配器
-        handleAdapters.handle(req, resp, mapping);
+        //适配器处理对应控制器的请求返回WinterModelAndView对象
+        WinterModelAndView modelAndView = handleAdapters.handle(req, resp, mapping);
 
     }
 

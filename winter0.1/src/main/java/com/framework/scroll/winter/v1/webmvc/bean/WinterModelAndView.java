@@ -1,4 +1,4 @@
-package com.framework.scroll.winter.v1.mvc.bean;
+package com.framework.scroll.winter.v1.webmvc.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
