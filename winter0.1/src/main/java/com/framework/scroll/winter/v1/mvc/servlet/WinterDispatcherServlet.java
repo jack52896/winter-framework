@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 public class WinterDispatcherServlet extends HttpServlet {
     private WinterClassPathXmlApplicationContext context;
     private List<WinterHandleMapping> winterHandleMappings = new ArrayList<>();
-    private Map<WinterHandleMapping, WinterHandleAdapters> AdaptersMap = new HashMap<>();
+    private Map<WinterHandleMapping, WinterHandleAdapters> adaptersMap = new HashMap<>();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
@@ -36,7 +36,11 @@ public class WinterDispatcherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doDisPatcher(req, resp);
+        try {
+            this.doDisPatcher(req, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void doDisPatcher(HttpServletRequest req, HttpServletResponse resp) {
@@ -48,6 +52,19 @@ public class WinterDispatcherServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
+        WinterHandleAdapters handleAdapters = getHandleAdapters(mapping);
+
+    }
+
+    private WinterHandleAdapters getHandleAdapters(WinterHandleMapping mapping) {
+        if(this.adaptersMap.isEmpty()){
+            return null;
+        }
+        WinterHandleAdapters adapters = adaptersMap.get(mapping);
+        if(adapters.support(mapping)){
+            return adapters;
+        }
+        return null;
     }
 
     private WinterHandleMapping getHandle(HttpServletRequest req) {
@@ -74,8 +91,21 @@ public class WinterDispatcherServlet extends HttpServlet {
      */
     public void initCompoents(WinterClassPathXmlApplicationContext context){
         //开始初始化mvc的9大组件
-        //1、初始化handleMapping
+        //1、初始化handleMapping组件
         initHandleMapping(context);
+        //2、初始化handleadapters组件
+        initHandleAdapters(context);
+        //3、初始化视图解析器
+        initViewResolvers(context);
+        //初始化完成mvc的核心组件
+    }
+
+    /**
+     * 初始化视图解析器
+     * @param context
+     */
+    private void initViewResolvers(WinterClassPathXmlApplicationContext context) {
+
     }
 
     /**
@@ -124,7 +154,7 @@ public class WinterDispatcherServlet extends HttpServlet {
 
     private void initHandleAdapters(WinterClassPathXmlApplicationContext context) {
         for (WinterHandleMapping winterHandleMapping : this.winterHandleMappings) {
-            this.AdaptersMap.put(winterHandleMapping, new WinterHandleAdapters());
+            this.adaptersMap.put(winterHandleMapping, new WinterHandleAdapters());
         }
     }
 }
