@@ -7,19 +7,20 @@ import com.framework.scroll.winter.context.WinterClassPathXmlApplicationContext;
 import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleAdapters;
 import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleMapping;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterModelAndView;
+import com.framework.scroll.winter.v1.webmvc.bean.WinterView;
+import com.framework.scroll.winter.v1.webmvc.bean.WinterViewResolver;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -30,6 +31,7 @@ public class WinterDispatcherServlet extends HttpServlet {
     private WinterClassPathXmlApplicationContext context;
     private List<WinterHandleMapping> winterHandleMappings = new ArrayList<>();
     private Map<WinterHandleMapping, WinterHandleAdapters> adaptersMap = new HashMap<>();
+    private List<WinterViewResolver> winterViewResolvers = new ArrayList<>();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
@@ -59,6 +61,21 @@ public class WinterDispatcherServlet extends HttpServlet {
         //适配器处理对应控制器的请求返回WinterModelAndView对象
         WinterModelAndView modelAndView = handleAdapters.handle(req, resp, mapping);
 
+        if(modelAndView == null){
+            return;
+        }
+
+        if(winterViewResolvers.isEmpty()){
+            return;
+        }
+
+        for (WinterViewResolver winterViewResolver : winterViewResolvers) {
+            WinterView winterView = winterViewResolver.resolverViewName(modelAndView.getViewName());
+            if(winterView != null){
+                winterView.render(modelAndView.getModel(), req, resp);
+                return;
+            }
+        }
     }
 
     private WinterHandleAdapters getHandleAdapters(WinterHandleMapping mapping) {
@@ -110,7 +127,12 @@ public class WinterDispatcherServlet extends HttpServlet {
      * @param context
      */
     private void initViewResolvers(WinterClassPathXmlApplicationContext context) {
-
+        Properties config = context.getConfig();
+        URL url = this.getClass().getClassLoader().getResource(config.getProperty("templateRoot"));
+        File file = new File(url.getFile());
+        for (File listFile : file.listFiles()) {
+            winterViewResolvers.add(new WinterViewResolver(this.getClass().getClassLoader().getResource(config.getProperty("templateRoot").replaceAll("\\.", "/")).getFile()));
+        }
     }
 
     /**

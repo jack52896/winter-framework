@@ -36,7 +36,9 @@ public class WinterBeanDefinitionReader {
         }
         doScan(properties.getProperty(SCAN_PACKAGE));
     }
-
+    public Properties getConfig(){
+        return this.properties;
+    }
     public void doScan(String property) {
         URL url = this.getClass().getClassLoader().getResource(property.replaceAll("\\.", "/"));
         File classPath = new File(url.getFile());
@@ -56,6 +58,8 @@ public class WinterBeanDefinitionReader {
 
 //    public static void main(String[] args) {
 //        InputStream is = WinterBeanDefinitionReader.class.getClassLoader().getResourceAsStream("application.properties");
+//        URL resource = WinterBeanDefinitionReader.class.getClassLoader().getResource("application.properties");
+//        System.out.println(resource);
 //        System.out.println(is);
 //    }
     /**

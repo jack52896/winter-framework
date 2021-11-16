@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -120,6 +121,9 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
             }
             super.beanDefinitionMap.put(winterBeanDefinition.getFactoryBeanName(), winterBeanDefinition);
         }
+    }
+    public Properties getConfig(){
+        return this.reader.getConfig();
     }
     /**
      * 获取所有的BeanDefinition
