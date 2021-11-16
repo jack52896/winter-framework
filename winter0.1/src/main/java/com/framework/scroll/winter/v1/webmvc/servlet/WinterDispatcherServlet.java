@@ -1,13 +1,12 @@
 package com.framework.scroll.winter.v1.webmvc.servlet;
 
-import com.framework.scroll.winter.annonation.WinterAutowired;
-import com.framework.scroll.winter.annonation.WinterController;
-import com.framework.scroll.winter.annonation.WinterRequestMapping;
+import com.framework.scroll.winter.annotation.WinterAutowired;
+import com.framework.scroll.winter.annotation.WinterController;
+import com.framework.scroll.winter.annotation.WinterRequestMapping;
 import com.framework.scroll.winter.beans.config.WinterBeanDefinition;
 import com.framework.scroll.winter.context.WinterClassPathXmlApplicationContext;
-import com.framework.scroll.winter.context.support.WinterBeanDefinitionReader;
-import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleAdapters;
-import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleMapping;
+import com.framework.scroll.winter.v1.webmvc.annotation.WinterHandleAdapters;
+import com.framework.scroll.winter.v1.webmvc.annotation.WinterHandleMapping;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterModelAndView;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterView;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterViewResolver;
@@ -24,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * @author http://zouyujie.top
@@ -139,7 +137,10 @@ public class WinterDispatcherServlet extends HttpServlet {
         URL url = this.getClass().getClassLoader().getResource(config.getProperty("templateRoot"));
         File file = new File(url.getFile());
         for (File listFile : file.listFiles()) {
-            winterViewResolvers.add(new WinterViewResolver(this.getClass().getClassLoader().getResource(config.getProperty("templateRoot").replaceAll("\\.", "/")).getFile()));
+            winterViewResolvers.add(new WinterViewResolver(
+                    this.getClass().getClassLoader()
+                            .getResource(config.getProperty("templateRoot")
+                                    .replaceAll("\\.", "/")).getFile()));
         }
     }
 

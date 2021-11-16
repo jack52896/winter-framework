@@ -1,6 +1,6 @@
 package org.demo.test.demo.service.impl;
 
-import com.framework.scroll.winter.annonation.WinterService;
+import com.framework.scroll.winter.annotation.WinterService;
 import org.demo.test.demo.service.DemoService;
 
 /**

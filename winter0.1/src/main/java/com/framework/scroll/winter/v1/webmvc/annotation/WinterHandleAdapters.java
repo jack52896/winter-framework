@@ -1,6 +1,6 @@
-package com.framework.scroll.winter.v1.webmvc.annonation;
+package com.framework.scroll.winter.v1.webmvc.annotation;
 
-import com.framework.scroll.winter.annonation.WinterRequestParam;
+import com.framework.scroll.winter.annotation.WinterRequestParam;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterModelAndView;
 
 import javax.servlet.http.HttpServletRequest;

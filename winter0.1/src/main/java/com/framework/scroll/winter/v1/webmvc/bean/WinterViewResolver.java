@@ -8,18 +8,24 @@ import java.io.File;
  */
 public class WinterViewResolver {
     private final String DEFAULT_SUFFIX=".html";
-    private File templateRootDir;
+    private File templateRoot;
     private String viewName;
 
     public WinterViewResolver(String templateRoot) {
-        this.templateRootDir = new File(templateRoot);
+        this.templateRoot = new File(templateRoot);
     }
+
     public WinterView resolverViewName(String viewName){
+
         if("".equals(viewName) || null == viewName){
             return  null;
         }
+
         viewName = viewName.endsWith(DEFAULT_SUFFIX)? viewName : viewName+DEFAULT_SUFFIX;
-        File file = new File((templateRootDir.getPath()+"/"+viewName).replaceAll("/+", "/"));
+
+        File file = new File
+                ((templateRoot.getPath() + "/" + viewName).replaceAll("/+", "/"));
+
         return new WinterView(file);
     }
 }

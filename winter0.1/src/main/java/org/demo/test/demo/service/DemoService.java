@@ -1,6 +1,6 @@
 package org.demo.test.demo.service;
 
-import com.framework.scroll.winter.annonation.WinterService;
+import com.framework.scroll.winter.annotation.WinterService;
 
 /**
  * @author http://zouyujie.top

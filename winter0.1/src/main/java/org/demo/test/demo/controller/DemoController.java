@@ -1,9 +1,9 @@
 package org.demo.test.demo.controller;
 
-import com.framework.scroll.winter.annonation.WinterAutowired;
-import com.framework.scroll.winter.annonation.WinterController;
-import com.framework.scroll.winter.annonation.WinterRequestMapping;
-import com.framework.scroll.winter.annonation.WinterRequestParam;
+import com.framework.scroll.winter.annotation.WinterAutowired;
+import com.framework.scroll.winter.annotation.WinterController;
+import com.framework.scroll.winter.annotation.WinterRequestMapping;
+import com.framework.scroll.winter.annotation.WinterRequestParam;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterModelAndView;
 import org.demo.test.demo.service.DemoService;
 

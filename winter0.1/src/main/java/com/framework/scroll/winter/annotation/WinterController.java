@@ -1,10 +1,10 @@
-package com.framework.scroll.winter.annonation;
+package com.framework.scroll.winter.annotation;
 
 import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface WinterService {
+public @interface WinterController {
     String value() default "";
 }
