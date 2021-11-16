@@ -39,13 +39,19 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
         }
     }
     @Override
+    public Map<String, WinterBeanDefinition> getMap(){
+        return super.getMap();
+    }
+    @Override
     public Object getBean(String beanName) {
+        //demoService
         WinterBeanDefinition winterBeanDefinition = super.beanDefinitionMap.get(beanName);
         Object object = instantiateBean(winterBeanDefinition);
         if(object == null){
             return null;
         }
         //构造代理对象
+        //beanName = factoryName;
         WinterBeanWrapper winterBeanWrapper = new WinterBeanWrapper(object);
         factoryBeanInstanceObjectCache.put(beanName, winterBeanWrapper);
         //依赖注入
@@ -66,10 +72,11 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
             field.setAccessible(true);
             String fieldTypeName = field.getAnnotation(WinterAutowired.class).value();
             if("".equals(fieldTypeName)){
-                fieldTypeName = field.getType().getSimpleName();
+                fieldTypeName = this.reader.charFirst(field.getType().getSimpleName());
             }
             try {
-                field.set(object, this.factoryBeanInstanceObjectCache.get(fieldTypeName).getWrapperInstance());
+                Object wrapperInstance = this.factoryBeanInstanceObjectCache.get(fieldTypeName).getWrapperInstance();
+                field.set(object, wrapperInstance);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -83,13 +90,15 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
      */
     private Object instantiateBean(WinterBeanDefinition winterBeanDefinition){
         Object instant = null;
+        //当前类的全类名
         String className = winterBeanDefinition.getBeanClassName();
         try {
-            if(this.factoryBeanObjectCache.containsKey(winterBeanDefinition.getBeanClassName())){
-                instant = factoryBeanObjectCache.get(winterBeanDefinition.getBeanClassName());
+            if(this.factoryBeanObjectCache.containsKey(winterBeanDefinition.getFactoryBeanName())){
+                instant = factoryBeanObjectCache.get(winterBeanDefinition.getFactoryBeanName());
             }
             Class<?> clazz = Class.forName(className);
             instant = clazz.getConstructor().newInstance();
+            //key=demoService value=instant
             factoryBeanObjectCache.put(winterBeanDefinition.getFactoryBeanName(), instant);
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
@@ -116,9 +125,11 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
      */
     protected void doRegisterBeanDefinition(List<WinterBeanDefinition> winterBeanDefinitions) throws Exception {
         for (WinterBeanDefinition winterBeanDefinition : winterBeanDefinitions) {
-            if(super.beanDefinitionMap.containsKey(winterBeanDefinition.getFactoryBeanName())){
-                throw new Exception("重复注册");
-            }
+//            if(super.beanDefinitionMap.containsKey(winterBeanDefinition.getFactoryBeanName())){
+//                throw new Exception("重复注册");
+//            }
+
+            //key=demoService value=WinterBeanDefinition
             super.beanDefinitionMap.put(winterBeanDefinition.getFactoryBeanName(), winterBeanDefinition);
         }
     }

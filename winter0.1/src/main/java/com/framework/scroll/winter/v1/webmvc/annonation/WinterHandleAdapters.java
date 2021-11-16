@@ -63,9 +63,10 @@ public class WinterHandleAdapters {
                 continue;
             }
             int index = paramMapping.get(param.getKey());
-            paramValues[index] = Case(parameterTypes[index], Arrays.toString(param.getValue())
-                    .replaceAll("\\[|\\]","")
-                    .replaceAll("\\s",""));
+            paramValues[index] = Case(parameterTypes[index],
+                    Arrays.toString(param.getValue())
+                            .replaceAll("\\[|\\]","")
+                            .replaceAll("\\s",""));
         }
 
         if(paramMapping.containsKey(HttpServletRequest.class.getName())){

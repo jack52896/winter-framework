@@ -16,4 +16,7 @@ import java.util.Map;
 public class WinterDefaultListableBeanFactory extends WinterAbstractApplicationConetxt{
 
     protected final Map<String, WinterBeanDefinition> beanDefinitionMap = new HashMap<String, WinterBeanDefinition>();
+    public Map<String, WinterBeanDefinition> getMap(){
+        return beanDefinitionMap;
+    }
 }

@@ -1,9 +1,11 @@
 package com.framework.scroll.winter.v1.webmvc.servlet;
 
+import com.framework.scroll.winter.annonation.WinterAutowired;
 import com.framework.scroll.winter.annonation.WinterController;
 import com.framework.scroll.winter.annonation.WinterRequestMapping;
 import com.framework.scroll.winter.beans.config.WinterBeanDefinition;
 import com.framework.scroll.winter.context.WinterClassPathXmlApplicationContext;
+import com.framework.scroll.winter.context.support.WinterBeanDefinitionReader;
 import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleAdapters;
 import com.framework.scroll.winter.v1.webmvc.annonation.WinterHandleMapping;
 import com.framework.scroll.winter.v1.webmvc.bean.WinterModelAndView;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -34,7 +37,7 @@ public class WinterDispatcherServlet extends HttpServlet {
     private List<WinterViewResolver> winterViewResolvers = new ArrayList<>();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        this.doPost(req, resp);
     }
 
     @Override
@@ -93,14 +96,19 @@ public class WinterDispatcherServlet extends HttpServlet {
         String url = req.getRequestURI();
         String contextPath = req.getContextPath();
         String replace = url.replace(contextPath, "");
+        System.out.println("当前的路径"+replace);
         for (WinterHandleMapping winterHandleMapping : winterHandleMappings) {
-            if(winterHandleMapping.getPattern().equals(Pattern.compile(replace))){
+            if(winterHandleMapping.getUrl().equals(replace)){
                 return winterHandleMapping;
             }
         }
         return null;
     }
-
+    public String charFirst(String factoryName){
+        char[] xss = factoryName.toCharArray();
+        xss[0] += 32;
+        return String.valueOf(xss);
+    }
     @Override
     public void init(ServletConfig config) throws ServletException {
         context = new WinterClassPathXmlApplicationContext(config.getInitParameter("contextConfigLocation"));
@@ -144,6 +152,7 @@ public class WinterDispatcherServlet extends HttpServlet {
         for (WinterBeanDefinition beanDefition : beanDefitions) {
             try {
                 Class<?> clazz = Class.forName(beanDefition.getBeanClassName());
+                Object obj = clazz.getConstructor().newInstance();
                 if(clazz.isAnnotationPresent(WinterController.class)){
                     StringBuilder baseUrl = new StringBuilder(clazz.getAnnotation(WinterController.class).value());
                     if(clazz.isAnnotationPresent(WinterRequestMapping.class)){
@@ -153,30 +162,34 @@ public class WinterDispatcherServlet extends HttpServlet {
                     for (Method method : methods) {
                         if(method.isAnnotationPresent(WinterRequestMapping.class)){
                             baseUrl.append(method.getAnnotation(WinterRequestMapping.class).value());
-                            Pattern pattern = Pattern.compile(String.valueOf(baseUrl));
                             WinterHandleMapping mapping = new WinterHandleMapping();
                             mapping.setMethod(method);
-                            mapping.setPattern(pattern);
-                            try {
-                                mapping.setController(clazz.getConstructor().newInstance());
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            } catch (NoSuchMethodException e) {
-                                e.printStackTrace();
-                            }
+                            mapping.setUrl(baseUrl.toString());
+                            mapping.setController(obj);
                             //收集好所有构造出来的handlemapping闯入handleMappingAdapters
                             winterHandleMappings.add(mapping);
                         }
                     }
+                    Field[] fields = clazz.getDeclaredFields();
+                    for (Field field : fields) {
+                        if(field.isAnnotationPresent(WinterAutowired.class)){
+                            Map<String, WinterBeanDefinition> map = context.getMap();
+                            String fieldName = field.getAnnotation(WinterAutowired.class).value();
+                            if("".equals(fieldName)){
+                                fieldName = charFirst(field.getType().getSimpleName());
+                            }
+                            WinterBeanDefinition winterBeanDefinition = map.get(fieldName);
+                            String beanClassName = winterBeanDefinition.getBeanClassName();
+                            field.setAccessible(true);
+                            field.set(obj, Class.forName(beanClassName).getConstructor().newInstance());
+                        }
+                    }
                 }
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
+
     }
 
     private void initHandleAdapters(WinterClassPathXmlApplicationContext context) {

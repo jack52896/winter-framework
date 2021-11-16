@@ -13,5 +13,5 @@ import java.util.regex.Pattern;
 public class WinterHandleMapping {
     private Object controller;
     private Method method;
-    private Pattern pattern;
+    private String url;
 }

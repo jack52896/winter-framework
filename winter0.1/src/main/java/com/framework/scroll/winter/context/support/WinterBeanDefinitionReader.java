@@ -77,7 +77,6 @@ public class WinterBeanDefinitionReader {
                 }
                 WinterBeanDefinition winterBeanDefinition = doCreateBeanDefinition(charFirst(clazz.getSimpleName()), clazz.getName());
                 result.add(winterBeanDefinition);
-
                 Class<?>[] interfaces = clazz.getInterfaces();
                 for (Class<?> anInterface : interfaces) {
                     WinterBeanDefinition interfaceDefinition = doCreateBeanDefinition(charFirst(anInterface.getSimpleName()), clazz.getName());
@@ -90,7 +89,7 @@ public class WinterBeanDefinitionReader {
         }
         return result;
     }
-    public WinterBeanDefinition doCreateBeanDefinition(String beanClassName, String factoryBeanName){
+    public WinterBeanDefinition doCreateBeanDefinition(String factoryBeanName, String beanClassName){
         WinterBeanDefinition winterBeanDefinition  = new WinterBeanDefinition();
         winterBeanDefinition.setFactoryBeanName(factoryBeanName);
         winterBeanDefinition.setBeanClassName(beanClassName);
