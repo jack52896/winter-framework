@@ -28,3 +28,5 @@ WinterBeanDefinition对象存入kv键值对的beanDefinitionMap中
 4) 返回结果封装成ModelAndView对象交给视图解析器解析
 
 5) 视图解析器解析成功后返回WinterView对象渲染页面视图
+
+四、aop初始化
