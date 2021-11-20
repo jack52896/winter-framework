@@ -107,7 +107,7 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
     }
     @Override
     public Object getBean(Class<?> clazz) {
-        return null;
+        return getBean(clazz.getSimpleName());
     }
 
     @Override

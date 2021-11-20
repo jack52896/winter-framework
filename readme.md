@@ -31,3 +31,7 @@ WinterBeanDefinition对象存入kv键值对的beanDefinitionMap中
 5) 视图解析器解析成功后返回WinterView对象渲染页面视图
 
 ## 四、aop初始化
+
+# 更新
+1) DI模块中先注入所有属性、再注入对象 
+2) 修改于2021.11.20 10:28

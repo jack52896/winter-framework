@@ -153,7 +153,13 @@ public class WinterDispatcherServlet extends HttpServlet {
         for (WinterBeanDefinition beanDefition : beanDefitions) {
             try {
                 Class<?> clazz = Class.forName(beanDefition.getBeanClassName());
-                Object obj = clazz.getConstructor().newInstance();
+                Field[] fields = clazz.getDeclaredFields();
+                for (Field field : fields) {
+                    if(field.isAnnotationPresent(WinterAutowired.class)){
+                        context.getBean(charFirst(field.getType().getSimpleName()));
+                    }
+                }
+                Object obj = context.getBean(beanDefition.getFactoryBeanName());
                 if(clazz.isAnnotationPresent(WinterController.class)){
                     StringBuilder baseUrl = new StringBuilder(clazz.getAnnotation(WinterController.class).value());
                     if(clazz.isAnnotationPresent(WinterRequestMapping.class)){
@@ -171,22 +177,8 @@ public class WinterDispatcherServlet extends HttpServlet {
                             winterHandleMappings.add(mapping);
                         }
                     }
-                    Field[] fields = clazz.getDeclaredFields();
-                    for (Field field : fields) {
-                        if(field.isAnnotationPresent(WinterAutowired.class)){
-                            Map<String, WinterBeanDefinition> map = context.getMap();
-                            String fieldName = field.getAnnotation(WinterAutowired.class).value();
-                            if("".equals(fieldName)){
-                                fieldName = charFirst(field.getType().getSimpleName());
-                            }
-                            WinterBeanDefinition winterBeanDefinition = map.get(fieldName);
-                            String beanClassName = winterBeanDefinition.getBeanClassName();
-                            field.setAccessible(true);
-                            field.set(obj, Class.forName(beanClassName).getConstructor().newInstance());
-                        }
-                    }
                 }
-            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
