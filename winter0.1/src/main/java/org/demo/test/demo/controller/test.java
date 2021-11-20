@@ -2,6 +2,7 @@ package org.demo.test.demo.controller;
 
 import com.framework.scroll.winter.context.WinterClassPathXmlApplicationContext;
 import org.demo.test.demo.service.DemoService;
+import org.demo.test.demo.service.impl.DemoServiceImpl;
 
 /**
  * @author http://zouyujie.top
@@ -10,8 +11,9 @@ import org.demo.test.demo.service.DemoService;
 public class test {
     public static void main(String[] args) {
         WinterClassPathXmlApplicationContext context = new WinterClassPathXmlApplicationContext("application.properties");
-        DemoService s = (DemoService) context.getBean("demoService");
+        DemoServiceImpl s = (DemoServiceImpl) context.getBean("demoService");
         DemoController sq = (DemoController) context.getBean("demoController");
+        System.out.println(s.demoController);
         System.out.println(sq.demoService);
     }
 }

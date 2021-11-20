@@ -44,6 +44,13 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
     }
     @Override
     public Object getBean(String beanName) {
+        /**
+         * 依赖注入
+         * 1.从beanDefinitionMap中寻找用户传入的beanName
+         * 2.初始化beanDefinition
+         * 3.构造返回的对象为WinterBeanWrapper，并且存入factoryBeanInstanceObjectCache
+         * 4.为对象带有AutoWired注解的属性依赖注入属性
+         */
         //demoService
         WinterBeanDefinition winterBeanDefinition = super.beanDefinitionMap.get(beanName);
         Object object = instantiateBean(winterBeanDefinition);
@@ -54,12 +61,11 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
         //beanName = factoryName;
         WinterBeanWrapper winterBeanWrapper = new WinterBeanWrapper(object);
         factoryBeanInstanceObjectCache.put(beanName, winterBeanWrapper);
-        //依赖注入
-        doAutoWired(object);
+        fieldWired(object);
         return factoryBeanInstanceObjectCache.get(beanName).getWrapperInstance();
     }
 
-    private void doAutoWired(Object object) {
+    private void fieldWired(Object object) {
         Class<?> clazz = object.getClass();
         if(!clazz.isAnnotationPresent(WinterController.class) || clazz.isAnnotationPresent(WinterService.class)){
             return;

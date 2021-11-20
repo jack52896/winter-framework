@@ -12,7 +12,7 @@ import org.demo.test.demo.service.DemoService;
 @WinterService
 public class DemoServiceImpl implements DemoService {
     @WinterAutowired
-    DemoController demoController;
+    public DemoController demoController;
     @Override
     public String getData(){
         return "hello ioc&di&mvc";
