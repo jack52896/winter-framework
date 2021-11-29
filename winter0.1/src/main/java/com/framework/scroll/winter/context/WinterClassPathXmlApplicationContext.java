@@ -3,6 +3,9 @@ package com.framework.scroll.winter.context;
 import com.framework.scroll.winter.annotation.WinterAutowired;
 import com.framework.scroll.winter.annotation.WinterController;
 import com.framework.scroll.winter.annotation.WinterService;
+import com.framework.scroll.winter.aop.WinterJDKAopProxy;
+import com.framework.scroll.winter.aop.config.WinterAopConfig;
+import com.framework.scroll.winter.aop.support.WinterAdvisedSupport;
 import com.framework.scroll.winter.beans.WinterBeanWrapper;
 import com.framework.scroll.winter.beans.config.WinterBeanDefinition;
 import com.framework.scroll.winter.context.support.WinterBeanDefinitionReader;
@@ -104,12 +107,28 @@ public class WinterClassPathXmlApplicationContext extends WinterDefaultListableB
             }
             Class<?> clazz = Class.forName(className);
             instant = clazz.getConstructor().newInstance();
+
+            WinterAdvisedSupport support = doCreateSupport(winterBeanDefinition);
+            support.setInstant(instant);
+            support.setClazz(clazz);
+            instant = new WinterJDKAopProxy(support).getProxy();
+
             //key=demoService value=instant
             factoryBeanObjectCache.put(winterBeanDefinition.getFactoryBeanName(), instant);
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return instant;
+    }
+    public WinterAdvisedSupport doCreateSupport(WinterBeanDefinition beanDefinition){
+        WinterAopConfig config = new WinterAopConfig();
+        config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
+        config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
+        config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
+        return new WinterAdvisedSupport(config);
     }
     @Override
     public Object getBean(Class<?> clazz) {
